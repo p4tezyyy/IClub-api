@@ -1,7 +1,15 @@
 # Security policy
 
-This is an unofficial iClub integration, not affiliated with iClub. For security guidance and recommended use, see [docs/security.md](docs/security.md).
+The unofficial iClub API SDK handles login credentials and sensitive membership information. Read the [full security guide](docs/security.md) and [limitations](docs/limitations.md).
 
-Do not post real session IDs, passwords, QR codes, payment links or member information in public issues. Before reporting a vulnerability, use the repository's private GitHub Security Advisory channel when available.
+## Private vulnerability reports
 
-No financial transactions are executed by this SDK; browser-based credit flows only prepare a redirect to the official service. Never retry mutating operations indiscriminately.
+Do not disclose passwords, cookies, session IDs, account records, payment links or QR codes in public issues.
+
+Use [GitHub private vulnerability reporting](https://github.com/p4tezyyy/IClub-api/security/advisories/new) **if enabled**, or contact the maintainer through an established private channel. Do not publish an exploit before coordinating disclosure.
+
+## Safe usage and support
+
+Only access accounts you are authorized to use. Keep credentials in a secrets manager or environment variables; protect authenticated sessions; redact logs and never blindly retry bookings or other mutating operations.
+
+This is an early community-maintained SDK with no guaranteed security-support period or SLA. The library does not process credit-card charges: its browser top-up feature only prepares the official payment page.

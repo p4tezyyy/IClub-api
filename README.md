@@ -1,47 +1,58 @@
 # iClub API
 
-**Unofficial, community-maintained SDK for iClub fitness accounts.** Two independently installable libraries, one Python and one Node.js/TypeScript, built from the supplied ModernFITCLUB project.
+[![CI](https://github.com/p4tezyyy/IClub-api/actions/workflows/ci.yml/badge.svg)](https://github.com/p4tezyyy/IClub-api/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/iclub-api.svg?label=npm)](https://www.npmjs.com/package/iclub-api)
+[![PyPI](https://img.shields.io/pypi/v/iclub-api.svg?label=PyPI)](https://pypi.org/project/iclub-api/)
+[![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue.svg)](LICENSE)
 
-[Getting started](docs/getting-started.md) · [Python API](docs/python.md) · [Node.js API](docs/nodejs.md) · [All methods](docs/api-reference.md) · [Publishing](docs/publishing.md) · [Security](docs/security.md)
+**Unofficial iClub SDK for Python and Node.js / TypeScript.** Access an authorized fitness account through observed iClub SignalR endpoints. Optional Playwright supports browser-only operations.
 
-> **Not affiliated with or endorsed by iClub.** Uses observed private ASP.NET SignalR endpoints at `online.iclub.sk`, plus optional Playwright for certain web UI operations. May break when iClub updates its service. Only use your own account or accounts with explicit permission.
+> [!WARNING]
+> **Not affiliated with or endorsed by iClub.** This SDK uses private, changeable endpoints at `online.iclub.sk`. Only use accounts you own or have permission to access.
 
-## Installation (once published)
+## Install
 
-| Environment | Install | Import |
-|---|---|---|
-| Python 3.10+ | `python -m pip install iclub_api` | `from iclub_api import IClub` |
-| Node.js 20+ | `npm install iclub-api` | `import { IClub } from "iclub-api"` |
+| Runtime | Package | Installation | Import |
+| --- | --- | --- | --- |
+| Python 3.10+ | [`iclub_api` on PyPI](https://pypi.org/project/iclub-api/) | `python -m pip install iclub_api` | `from iclub_api import IClub` |
+| Node.js 20+ ESM | [`iclub-api` on npm](https://www.npmjs.com/package/iclub-api) | `npm install iclub-api` | `import { IClub } from 'iclub-api'` |
 
-**These packages are prepared for publishing, not yet published by this project.** Install from the source directories until you publish them. Both packages have version `0.1.0`.
+Check the registry for available versions; the table does **not** guarantee a release has been published. See [source installation](docs/getting-started.md#2-install) if you need to use an unpublished version.
 
-## Example: Python
+## Python example
 
 ```python
-import os
 import asyncio
+import os
 from iclub_api import IClub
 
 async def main():
-    print('Clubs:', (await IClub.list_gyms())[:5])
+    print("Clubs:", [g["name"] for g in await IClub.list_gyms()])
     async with IClub() as api:
-        await api.login(os.environ['ICLUB_EMAIL'], os.environ['ICLUB_PASSWORD'], os.environ['ICLUB_GYM'])
-        print('Credit:', await api.get_credit())
-        print('Memberships:', await api.get_memberships())
-        print('Calendar:', await api.get_calendar(view='week'))
+        await api.login(
+            os.environ["ICLUB_EMAIL"],
+            os.environ["ICLUB_PASSWORD"],
+            os.environ["ICLUB_GYM"],
+        )
+        print("Credit:", await api.get_credit())
+        print("Memberships:", await api.get_memberships())
+        print("Calendar:", await api.get_calendar(view="week"))
 
 asyncio.run(main())
 ```
 
-## Example: Node.js
+## Node.js example
 
 ```js
 import { IClub } from 'iclub-api';
 
+const { ICLUB_EMAIL: email, ICLUB_PASSWORD: password, ICLUB_GYM: gym } = process.env;
+if (!email || !password || !gym) throw new Error('Set ICLUB_EMAIL, ICLUB_PASSWORD and ICLUB_GYM');
+
 const api = new IClub();
 try {
-  console.log('Clubs:', (await IClub.listGyms()).slice(0, 5));
-  await api.login(process.env.ICLUB_EMAIL, process.env.ICLUB_PASSWORD, process.env.ICLUB_GYM);
+  console.log('Clubs:', (await IClub.listGyms()).map((g) => g.name));
+  await api.login(email, password, gym);
   console.log('Credit:', await api.getCredit());
   console.log('Memberships:', await api.getMemberships());
   console.log('Calendar:', await api.getCalendar({ view: 'week' }));
@@ -50,29 +61,34 @@ try {
 }
 ```
 
-## Supported operations
+Choose the exact gym name returned by club discovery. Never hardcode your password in source.
 
-- Club discovery; login and logout; read user profile and customer statistics.
-- Memberships/tickets, account balance and credit settings.
-- Visit history and details; purchase/sale transaction history.
-- Reservation calendar, rooms, customer bookings, event details.
-- Dashboard aggregates, contact information changes, password changes.
-- Optional browser-based QR retrieval, registration, guarded reservation submission, and opening an official credit top-up flow.
-- Explicit advanced/raw SignalR invocations, error handling, and short-lived read caches.
+## Supported features
 
-See [the complete API reference](docs/api-reference.md) for every method and parameter. **Read-only operations use SignalR; several browser operations require Playwright and Chromium**. Booking return values do **not** guarantee server confirmation; top-ups do not charge money themselves.
+- Club discovery, authentication, profile and account statistics.
+- Memberships, account credit, visits, transactions and derived dashboards.
+- Reservation calendar, rooms and event details.
+- Optional browser-based QR code, registration, guarded booking and top-up page preparation.
+- Advanced SignalR invocation for authorized users.
 
-## Docs, tests, releases
+**Limits:** Browser reservation submission does not guarantee a confirmed booking. Top-up preparation does not charge a card. Live compatibility has not been independently verified; unit tests use mock data.
 
-- Multi-page Markdown docs in [`docs/`](docs/index.md) with an optional MkDocs Material site.
-- Python source: [`python/`](python/README.md); Node.js source: [`nodejs/`](nodejs/README.md).
-- Build and release workflows: [`.github/workflows/`](.github/workflows/); publication requires your npm/PyPI account and configured trusted publishing (or manual upload).
-- Release instructions: [`docs/publishing.md`](docs/publishing.md).
+## Documentation
+
+[Getting started](docs/getting-started.md) · [Python guide](docs/python.md) · [Node.js guide](docs/nodejs.md) · [API reference](docs/api-reference.md) · [Data models](docs/data-models.md) · [Browser features](docs/browser-features.md) · [Troubleshooting](docs/troubleshooting.md) · [Security](SECURITY.md) · [Publishing](docs/publishing.md)
+
+[Contributing](CONTRIBUTING.md) · [Changelog](docs/changelog.md) · [GitHub Issues](https://github.com/p4tezyyy/IClub-api/issues) · [GitHub Releases](https://github.com/p4tezyyy/IClub-api/releases)
+
+## Development
+
+```sh
+python -m pip install -e './python[test]'
+python -m pytest python/tests -q
+cd nodejs
+npm install
+npm run check
+```
 
 ## License
 
-**GNU General Public License v3.0 only (`GPL-3.0-only`)**. See [LICENSE](LICENSE). License applies to the SDK code distributed in this repository, subject to you holding the rights to license the originating code. Third-party dependencies and the iClub service remain under their own terms. `GPL-3.0-only` is copyleft; applications that distribute derivative/combined works may have to comply with its terms. Consult qualified counsel for specific distribution questions.
-
-## Status
-
-Version 0.1.0 is a **pre-release, source-derived integration**. Unit/smoke tests use mocked or offline data. No real iClub login, live booking, payment, or QR session has been verified for this version. The existence of an npm/PyPI project name is **not guaranteed** until the registries accept publication.
+[GNU General Public License version 3 only](LICENSE) (`GPL-3.0-only`). Third-party dependencies and the iClub service remain subject to their own terms. See [license notes](docs/license.md).

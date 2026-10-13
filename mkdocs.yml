@@ -1,6 +1,9 @@
 site_name: iClub API
 site_description: Unofficial iClub API SDK for Python and Node.js
-repo_name: iclub-api
+site_url: https://p4tezyyy.github.io/IClub-api/
+repo_url: https://github.com/p4tezyyy/IClub-api
+repo_name: p4tezyyy/IClub-api
+edit_uri: edit/main/docs/
 copyright: Community-maintained; GPL-3.0-only; not affiliated with iClub
 nav:
   - Overview: index.md

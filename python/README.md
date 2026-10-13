@@ -1,44 +1,61 @@
 # iclub_api — Python
 
-Async, unofficial iClub client for Python 3.10+. Full documentation is in the [source repository's docs](../docs/index.md), with [Python usage](../docs/python.md) and [all method signatures](../docs/api-reference.md).
+[![PyPI](https://img.shields.io/pypi/v/iclub-api)](https://pypi.org/project/iclub-api/)
+[![GitHub](https://img.shields.io/badge/source-GitHub-black)](https://github.com/p4tezyyy/IClub-api)
 
-Not supported by or affiliated with iClub. GPL-3.0-only. Uses private, changeable SignalR endpoints; requires an authorized account.
+Unofficial asynchronous iClub SDK for **Python 3.10+**, with optional Playwright browser support. Licensed under `GPL-3.0-only`. **Not affiliated with iClub.**
 
-## Install
-
-When published: `pip install iclub_api`
-
-From this repository:
+## Installation
 
 ```sh
-python -m pip install -e ./python
+python -m pip install iclub_api
 ```
 
-For QR codes, registration, credit top-up and bookings:
+For optional QR, reservation, registration and top-up-page features:
 
 ```sh
-python -m pip install 'iclub_api[browser]' # after publication
+python -m pip install 'iclub_api[browser]'
 python -m playwright install chromium
 ```
-
-For source installs, use `python -m pip install -e './python[browser]'` from the repository root.
 
 ## Example
 
 ```python
-import asyncio, os
+import asyncio
+import os
 from iclub_api import IClub
 
 async def main():
+    print('Clubs:', await IClub.list_gyms())
     async with IClub() as api:
-        await api.login(os.environ['ICLUB_EMAIL'], os.environ['ICLUB_PASSWORD'], os.environ['ICLUB_GYM'])
-        print(await api.get_credit())
-        print(await api.get_profile())
-        print(await api.get_calendar(view='week'))
+        await api.login(
+            os.environ['ICLUB_EMAIL'],
+            os.environ['ICLUB_PASSWORD'],
+            os.environ['ICLUB_GYM'],
+        )
+        print('Credit:', await api.get_credit())
+        print('Calendar:', await api.get_calendar(view='week'))
 
 asyncio.run(main())
 ```
 
-Methods are `async`; call them with `await`. The client closes its transport on exit. `browser_enabled=False` by default; enable it explicitly for browser-dependent operations. Registration is `await api.register(...)` on a browser-enabled client, even before login.
+Use the exact gym name returned by `list_gyms()`. Use `await` for all network operations and `async with` to clean up. Browser support is disabled by default; enable `IClub(browser_enabled=True)` if required.
 
-See [security](../docs/security.md) before using real credentials, and [limitations](../docs/limitations.md) before relying on booking or payment flows.
+## Install from source
+
+From the repository root:
+
+```sh
+git clone https://github.com/p4tezyyy/IClub-api.git
+cd IClub-api
+python -m pip install -e './python[test]'
+python -m pytest python/tests -q
+```
+
+For browser features from source use `python -m pip install -e './python[browser]'`.
+
+## Documentation
+
+[Getting started](https://github.com/p4tezyyy/IClub-api/blob/main/docs/getting-started.md) · [Python guide](https://github.com/p4tezyyy/IClub-api/blob/main/docs/python.md) · [API reference](https://github.com/p4tezyyy/IClub-api/blob/main/docs/api-reference.md) · [Browser features](https://github.com/p4tezyyy/IClub-api/blob/main/docs/browser-features.md) · [Security](https://github.com/p4tezyyy/IClub-api/blob/main/docs/security.md) · [Troubleshooting](https://github.com/p4tezyyy/IClub-api/blob/main/docs/troubleshooting.md)
+
+Private endpoints may change; a booking click is not server confirmation. [Report SDK problems](https://github.com/p4tezyyy/IClub-api/issues).
