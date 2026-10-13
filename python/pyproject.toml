@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iclub_api"
+version = "0.1.0"
+description = "Unofficial async iClub client SDK with SignalR and optional Playwright"
+keywords = ["iclub", "fitness", "signalr", "gym", "unofficial-api"]
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+dependencies = ["httpx>=0.25,<1", "websockets>=12,<17"]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.50,<2"]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "build>=1", "twine>=6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+iclub_api = ["py.typed"]

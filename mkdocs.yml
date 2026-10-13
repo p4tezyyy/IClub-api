@@ -1,0 +1,32 @@
+site_name: iClub API
+site_description: Unofficial iClub API SDK for Python and Node.js
+repo_name: iclub-api
+copyright: Community-maintained; GPL-3.0-only; not affiliated with iClub
+nav:
+  - Overview: index.md
+  - Getting started: getting-started.md
+  - Python: python.md
+  - Node.js / TypeScript: nodejs.md
+  - API reference: api-reference.md
+  - Data and responses: data-models.md
+  - SignalR and browser: architecture.md
+  - Browser and bookings: browser-features.md
+  - Errors & troubleshooting: troubleshooting.md
+  - Security & privacy: security.md
+  - Limits & compatibility: limitations.md
+  - Publishing to npm / PyPI: publishing.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+  - License: license.md
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true

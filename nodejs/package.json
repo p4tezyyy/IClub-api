@@ -1,0 +1,52 @@
+{
+  "name": "iclub-api",
+  "version": "0.1.0",
+  "description": "Unofficial iClub API client for Node.js and TypeScript (SignalR + optional browser)",
+  "type": "module",
+  "license": "GPL-3.0-only",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test test/*.test.mjs",
+    "check": "npm run build && npm test",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.60.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.18.1"
+  },
+  "keywords": [
+    "iclub",
+    "iclub-api",
+    "fitness",
+    "gym",
+    "signalr",
+    "typescript",
+    "unofficial-api"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
